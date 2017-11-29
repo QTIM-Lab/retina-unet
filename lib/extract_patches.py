@@ -23,7 +23,6 @@ def get_data_training(DRIVE_train_imgs_original,
     train_masks = load_hdf5(DRIVE_train_groudTruth) #masks always the same
     # visualize(group_images(train_imgs_original[0:20,:,:,:],5),'imgs_train')#.show()  #check original imgs train
 
-
     train_imgs = my_PreProc(train_imgs_original)
     train_masks = train_masks/255.
 
@@ -129,8 +128,8 @@ def data_consistency_check(imgs,masks):
     assert(imgs.shape[0]==masks.shape[0])
     assert(imgs.shape[2]==masks.shape[2])
     assert(imgs.shape[3]==masks.shape[3])
-    assert(masks.shape[1]==1)
-    assert(imgs.shape[1]==1 or imgs.shape[1]==3)
+    assert(masks.shape[3]==1)
+    assert(imgs.shape[3]==1 or imgs.shape[3]==3)
 
 
 #extract patches randomly in the full training images
@@ -140,13 +139,13 @@ def extract_random(full_imgs,full_masks, patch_h,patch_w, N_patches, inside=True
         print "N_patches: plase enter a multiple of 20"
         exit()
     assert (len(full_imgs.shape)==4 and len(full_masks.shape)==4)  #4D arrays
-    assert (full_imgs.shape[1]==1 or full_imgs.shape[1]==3)  #check the channel is 1 or 3
-    assert (full_masks.shape[1]==1)   #masks only black and white
-    assert (full_imgs.shape[2] == full_masks.shape[2] and full_imgs.shape[3] == full_masks.shape[3])
-    patches = np.empty((N_patches,full_imgs.shape[1],patch_h,patch_w))
-    patches_masks = np.empty((N_patches,full_masks.shape[1],patch_h,patch_w))
-    img_h = full_imgs.shape[2]  #height of the full image
-    img_w = full_imgs.shape[3] #width of the full image
+    assert (full_imgs.shape[3]==1 or full_imgs.shape[3]==3)  #check the channel is 1 or 3
+    assert (full_masks.shape[3]==1)   #masks only black and white
+    assert (full_imgs.shape[1] == full_masks.shape[1] and full_imgs.shape[2] == full_masks.shape[2])
+    patches = np.empty((N_patches, patch_h, patch_w, full_imgs.shape[3]))
+    patches_masks = np.empty((N_patches, patch_h,patch_w, full_masks.shape[3]))
+    img_h = full_imgs.shape[1]  #height of the full image
+    img_w = full_imgs.shape[2] #width of the full image
     # (0,0) in the center of the image
     patch_per_img = int(N_patches/full_imgs.shape[0])  #N_patches equally divided in the full images
     print "patches per full image: " +str(patch_per_img)
@@ -162,8 +161,8 @@ def extract_random(full_imgs,full_masks, patch_h,patch_w, N_patches, inside=True
             if inside==True:
                 if is_patch_inside_FOV(x_center,y_center,img_w,img_h,patch_h)==False:
                     continue
-            patch = full_imgs[i,:,y_center-int(patch_h/2):y_center+int(patch_h/2),x_center-int(patch_w/2):x_center+int(patch_w/2)]
-            patch_mask = full_masks[i,:,y_center-int(patch_h/2):y_center+int(patch_h/2),x_center-int(patch_w/2):x_center+int(patch_w/2)]
+            patch = full_imgs[i,y_center-int(patch_h/2):y_center+int(patch_h/2),x_center-int(patch_w/2):x_center+int(patch_w/2),:]
+            patch_mask = full_masks[i,y_center-int(patch_h/2):y_center+int(patch_h/2),x_center-int(patch_w/2):x_center+int(patch_w/2),:]
             patches[iter_tot]=patch
             patches_masks[iter_tot]=patch_mask
             iter_tot +=1   #total

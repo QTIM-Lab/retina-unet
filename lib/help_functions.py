@@ -14,16 +14,16 @@ def write_hdf5(arr,outfile):
 #convert RGB image in black and white
 def rgb2gray(rgb):
     assert (len(rgb.shape)==4)  #4D arrays
-    assert (rgb.shape[1]==3)
-    bn_imgs = rgb[:,0,:,:]*0.299 + rgb[:,1,:,:]*0.587 + rgb[:,2,:,:]*0.114
-    bn_imgs = np.reshape(bn_imgs,(rgb.shape[0],1,rgb.shape[2],rgb.shape[3]))
+    assert (rgb.shape[3]==3)
+    bn_imgs = rgb[:,:,:,0]*0.299 + rgb[:,:,:,1]*0.587 + rgb[:,:,:,2]*0.114
+    bn_imgs = np.reshape(bn_imgs,(rgb.shape[0],rgb.shape[1],rgb.shape[2],1))
     return bn_imgs
 
 #group a set of images row per columns
 def group_images(data,per_row):
     assert data.shape[0]%per_row==0
-    assert (data.shape[1]==1 or data.shape[1]==3)
-    data = np.transpose(data,(0,2,3,1))  #corect format for imshow
+    assert (data.shape[3]==1 or data.shape[3]==3)
+    # data = np.transpose(data,(0,2,3,1))  #corect format for imshow
     all_stripe = []
     for i in range(int(data.shape[0]/per_row)):
         stripe = data[i*per_row]
@@ -53,9 +53,9 @@ def visualize(data,filename):
 #prepare the mask in the right shape for the Unet
 def masks_Unet(masks):
     assert (len(masks.shape)==4)  #4D arrays
-    assert (masks.shape[1]==1 )  #check the channel is 1
-    im_h = masks.shape[2]
-    im_w = masks.shape[3]
+    assert (masks.shape[3]==1)  #check the channel is 1
+    im_h = masks.shape[1]
+    im_w = masks.shape[2]
     masks = np.reshape(masks,(masks.shape[0],im_h*im_w))
     new_masks = np.empty((masks.shape[0],im_h*im_w,2))
     for i in range(masks.shape[0]):
