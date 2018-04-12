@@ -14,15 +14,14 @@ def write_hdf5(arr,outfile):
 #convert RGB image in black and white
 def rgb2gray(rgb):
     assert (len(rgb.shape)==4)  #4D arrays
-    assert (rgb.shape[1]==3)
-    bn_imgs = rgb[:,0,:,:]*0.299 + rgb[:,1,:,:]*0.587 + rgb[:,2,:,:]*0.114
-    bn_imgs = np.reshape(bn_imgs,(rgb.shape[0],1,rgb.shape[2],rgb.shape[3]))
+    assert (rgb.shape[-1]==3)
+    bn_imgs = np.expand_dims(rgb[:,:,:,0]*0.299 + rgb[:,:,:,1]*0.587 + rgb[:,:,:,2]*0.114, axis=-1)
     return bn_imgs
 
 #group a set of images row per columns
 def group_images(data,per_row):
     assert data.shape[0]%per_row==0
-    assert (data.shape[1]==1 or data.shape[1]==3)
+    assert (data.shape[-1]==1 or data.shape[-1]==3)
     data = np.transpose(data,(0,2,3,1))  #corect format for imshow
     all_stripe = []
     for i in range(int(data.shape[0]/per_row)):
@@ -53,9 +52,9 @@ def visualize(data,filename):
 #prepare the mask in the right shape for the Unet
 def masks_Unet(masks):
     assert (len(masks.shape)==4)  #4D arrays
-    assert (masks.shape[1]==1 )  #check the channel is 1
-    im_h = masks.shape[2]
-    im_w = masks.shape[3]
+    assert (masks.shape[-1]==1)  #check the channel is 1
+    im_h = masks.shape[1]
+    im_w = masks.shape[2]
     masks = np.reshape(masks,(masks.shape[0],im_h*im_w))
     new_masks = np.empty((masks.shape[0],im_h*im_w,2))
     for i in range(masks.shape[0]):
@@ -85,7 +84,7 @@ def pred_to_imgs(pred, patch_height, patch_width, mode="original"):
                 else:
                     pred_images[i,pix]=0
     else:
-        print "mode " +str(mode) +" not recognized, it can be 'original' or 'threshold'"
+        print("mode " +str(mode) +" not recognized, it can be 'original' or 'threshold'")
         exit()
     pred_images = np.reshape(pred_images,(pred_images.shape[0],1, patch_height, patch_width))
     return pred_images
