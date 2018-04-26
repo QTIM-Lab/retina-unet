@@ -239,8 +239,8 @@ def paint_border_overlap(full_imgs, patch_h, patch_w, stride_h, stride_w):
 def extract_ordered_overlap(full_imgs, patch_h, patch_w,stride_h,stride_w):
     assert (len(full_imgs.shape)==4)  #4D arrays
     assert (full_imgs.shape[-1]==1 or full_imgs.shape[-1]==3)  #check the channel is 1 or 3
-    img_h = full_imgs.shape[2]  #height of the full image
-    img_w = full_imgs.shape[3] #width of the full image
+    img_h = full_imgs.shape[1]  #height of the full image
+    img_w = full_imgs.shape[2] #width of the full image
     assert ((img_h-patch_h)%stride_h==0 and (img_w-patch_w)%stride_w==0)
     N_patches_img = ((img_h-patch_h)//stride_h+1)*((img_w-patch_w)//stride_w+1)  #// --> division between integers
     N_patches_tot = N_patches_img*full_imgs.shape[0]
