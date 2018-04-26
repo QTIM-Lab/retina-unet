@@ -262,8 +262,8 @@ def extract_ordered_overlap(full_imgs, patch_h, patch_w,stride_h,stride_w):
 def recompone_overlap(preds, img_h, img_w, stride_h, stride_w):
     assert (len(preds.shape)==4)  #4D arrays
     assert (preds.shape[-1]==1 or preds.shape[-1]==3)  #check the channel is 1 or 3
-    patch_h = preds.shape[2]
-    patch_w = preds.shape[3]
+    patch_h = preds.shape[1]
+    patch_w = preds.shape[2]
     N_patches_h = (img_h-patch_h)//stride_h+1
     N_patches_w = (img_w-patch_w)//stride_w+1
     N_patches_img = N_patches_h * N_patches_w
