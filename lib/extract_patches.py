@@ -119,7 +119,7 @@ def get_data_testing_overlap(DRIVE_test_imgs_original, DRIVE_test_groudTruth, Im
     print patches_imgs_test.shape
     print "test PATCHES images range (min-max): " +str(np.min(patches_imgs_test)) +' - '+str(np.max(patches_imgs_test))
 
-    return patches_imgs_test, test_imgs.shape[2], test_imgs.shape[3], test_masks
+    return patches_imgs_test, test_imgs.shape[1], test_imgs.shape[2], test_masks
 
 
 #data consinstency check
