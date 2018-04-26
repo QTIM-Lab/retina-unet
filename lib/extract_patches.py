@@ -230,7 +230,7 @@ def paint_border_overlap(full_imgs, patch_h, patch_w, stride_h, stride_w):
         print "(img_w - patch_w) MOD stride_w: " +str(leftover_w)
         print "So the W dim will be padded with additional " +str(stride_w - leftover_w) + " pixels"
         tmp_full_imgs = np.zeros((full_imgs.shape[0],full_imgs.shape[2],img_w+(stride_w - leftover_w),full_imgs.shape[-1]))
-        tmp_full_imgs[0:full_imgs.shape[0],0:full_imgs.shape[2],0:img_w,0:full_imgs.shape[-1]] = full_imgs
+        tmp_full_imgs[0:full_imgs.shape[0],0:full_imgs.shape[1],0:img_w,0:full_imgs.shape[-1]] = full_imgs
         full_imgs = tmp_full_imgs
     print "new full images shape: \n" +str(full_imgs.shape)
     return full_imgs
