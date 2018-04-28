@@ -86,5 +86,5 @@ def pred_to_imgs(pred, patch_height, patch_width, mode="original"):
     else:
         print("mode " +str(mode) +" not recognized, it can be 'original' or 'threshold'")
         exit()
-    pred_images = np.reshape(pred_images,(pred_images.shape[0],1, patch_height, patch_width))
+    pred_images = np.reshape(pred_images,(pred_images.shape[0], patch_height, patch_width, 1))
     return pred_images
